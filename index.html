@@ -1,56 +1,241 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>鹅鸭杀群人格测试</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
-body{
-background:#f8edf2;
-min-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-padding:20px;
-}
-.box{
-background:white;
-padding:40px 30px;
-border-radius:24px;
-text-align:center;
-box-shadow:0 8px 30px rgba(210,100,140,0.12);
-max-width:460px;
-width:100%;
-}
-h1{
-font-size:26px;
-color:#d16b92;
-margin-bottom:12px;
-}
-.desc{
-color:#666;
-margin-bottom:30px;
-font-size:15px;
-}
-.start{
-background:linear-gradient(90deg,#e878a8,#d16b92);
-color:white;
-border:none;
-padding:16px;
-border-radius:16px;
-font-size:18px;
-width:100%;
-cursor:pointer;
-font-weight:bold;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鹅鸭杀群人格测试</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 封面页 */
+        #cover {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        #cover h1 {
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .start-btn {
+            padding: 15px 50px;
+            font-size: 1.5rem;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255, 71, 87, 0.4);
+            transition: all 0.3s;
+        }
+        .start-btn:hover {
+            transform: scale(1.1);
+            background: #ff3742;
+        }
+
+        /* 测试题页面 */
+        #test {
+            display: none;
+            min-height: 100vh;
+            padding-top: 50px;
+        }
+        .question {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+        .question h2 {
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .option {
+            background: rgba(255,255,255,0.15);
+            padding: 15px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+        .option:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(10px);
+        }
+
+        /* 结果页 */
+        #result {
+            display: none;
+            min-height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        #result h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+        }
+        #result-name {
+            font-size: 4rem;
+            margin: 30px 0;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(255,255,255,0.8);
+            animation: glow 2s infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 20px #fff; }
+            to { text-shadow: 0 0 40px #ff4757, 0 0 60px #ff4757; }
+        }
+        .restart-btn {
+            margin-top: 40px;
+            padding: 12px 40px;
+            font-size: 1.2rem;
+            background: #2ed573;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-<div class="box">
-<h1>鹅鸭杀群人格测试</h1>
-<p class="desc">测一测你最像群里的哪位大佬～</p>
-<button class="start" onclick="location.href='test.html'">开始测试</button>
-</div>
+
+    <!-- 封面 -->
+    <div id="cover">
+        <div class="container">
+            <h1>🦢 鹅鸭杀群人格测试</h1>
+            <p style="font-size: 1.4rem; margin-bottom: 60px; opacity: 0.9;">测测你是群里的哪种人格~</p>
+            <button class="start-btn" onclick="startTest()">开始测试</button>
+        </div>
+    </div>
+
+    <!-- 测试题页面 -->
+    <div id="test">
+        <div class="container">
+            <div class="question" id="q1">
+                <h2>1. 你的家乡在哪？</h2>
+                <div class="options">
+                    <div class="option" onclick="answer(1, 0)">献县</div>
+                    <div class="option" onclick="answer(1, 1)">美国</div>
+                </div>
+            </div>
+
+            <div class="question" id="q2" style="display:none;">
+                <h2>2. 你高中在哪里毕业？</h2>
+                <div class="options">
+                    <div class="option" onclick="answer(2, 0)">献县第一中学</div>
+                    <div class="option" onclick="answer(2, 1)">清华大学附属中学</div>
+                </div>
+            </div>
+
+            <div class="question" id="q3" style="display:none;">
+                <h2>3. 你的身高是多少？</h2>
+                <div class="options">
+                    <div class="option" onclick="answer(3, 0)">160-170</div>
+                    <div class="option" onclick="answer(3, 1)">170-180</div>
+                </div>
+            </div>
+
+            <div class="question" id="q4" style="display:none;">
+                <h2>4. 你最想成为谁？</h2>
+                <div class="options">
+                    <div class="option" onclick="answer(4, 0)">张元英</div>
+                    <div class="option" onclick="answer(4, 1)">我自己</div>
+                </div>
+            </div>
+
+            <div class="question" id="q5" style="display:none;">
+                <h2>5. 1+1=？</h2>
+                <div class="options">
+                    <div class="option" onclick="answer(5, 0)">2</div>
+                    <div class="option" onclick="answer(5, 1)">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 结果页面 -->
+    <div id="result">
+        <div class="container">
+            <h1>你的鹅鸭杀群人格是</h1>
+            <div id="result-name"></div>
+            <button class="restart-btn" onclick="restart()">重新测试</button>
+        </div>
+    </div>
+
+    <script>
+        const names = ["张靖涵", "赵雅涵", "刘硕", "刘瑶", "王梦涵", "赵英坤", "吕心茹", "范畅"];
+
+        let answers = {};
+
+        function startTest() {
+            document.getElementById('cover').style.display = 'none';
+            document.getElementById('test').style.display = 'block';
+            showQuestion(1);
+        }
+
+        function showQuestion(q) {
+            for (let i = 1; i <= 5; i++) {
+                const el = document.getElementById(`q${i}`);
+                if (el) el.style.display = (i === q) ? 'block' : 'none';
+            }
+        }
+
+        function answer(question, choice) {
+            answers[question] = choice;
+            
+            if (question < 5) {
+                showQuestion(question + 1);
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('test').style.display = 'none';
+            document.getElementById('result').style.display = 'flex';
+            
+            // 全随机生成结果（不管用户怎么选）
+            const randomIndex = Math.floor(Math.random() * names.length);
+            const resultName = names[randomIndex];
+            
+            document.getElementById('result-name').textContent = resultName;
+        }
+
+        function restart() {
+            answers = {};
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('cover').style.display = 'flex';
+        }
+
+        // 按回车也可以开始测试（可选）
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.getElementById('cover').style.display !== 'none') {
+                startTest();
+            }
+        });
+    </script>
 </body>
 </html>
