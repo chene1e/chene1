@@ -1,0 +1,61 @@
+[result.html](https://github.com/user-attachments/files/26695422/result.html)
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测试结果</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
+body{
+background:#f8edf2;
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:20px;
+}
+.card{
+background:white;
+padding:40px 30px;
+border-radius:24px;
+text-align:center;
+max-width:460px;
+width:100%;
+box-shadow:0 8px 30px rgba(210,100,140,0.12);
+}
+h2{
+font-size:22px;
+color:#d16b92;
+margin-bottom:20px;
+}
+.name{
+font-size:32px;
+font-weight:bold;
+color:#d16b92;
+margin-bottom:30px;
+}
+.btn{
+background:linear-gradient(90deg,#e878a8,#d16b92);
+color:white;
+border:none;
+padding:14px;
+border-radius:14px;
+width:100%;
+cursor:pointer;
+font-size:16px;
+}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>你的鹅鸭杀群人格是</h2>
+<div class="name" id="name"></div>
+<button class="btn" onclick="location.href='index.html'">重新测试</button>
+</div>
+
+<script>
+document.getElementById('name').innerText = JSON.parse(localStorage.result||'""')
+</script>
+</body>
+</html>
