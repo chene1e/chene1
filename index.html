@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的专属人格测试 | 4维度深度测评</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft Yahei", sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            padding: 20px 10px;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+        .container {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .desc {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .q-title {
+            font-size: 16px;
+            color: #2d3748;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        .options {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .option-item {
+            flex: 1;
+            min-width: 60px;
+            text-align: center;
+        }
+        .option-item input {
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        .option-item label {
+            display: block;
+            font-size: 12px;
+            color: #4a5568;
+            cursor: pointer;
+        }
+        #submit-btn {
+            width: 100%;
+            height: 50px;
+            background-color: #4299e1;
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+        #submit-btn:hover {
+            background-color: #3182ce;
+        }
+        #result-box {
+            display: none;
+            margin-top: 30px;
+        }
+        .type-tag {
+            text-align: center;
+            font-size: 40px;
+            font-weight: bold;
+            color: #4299e1;
+            margin-bottom: 20px;
+            letter-spacing: 5px;
+        }
+        .result-title {
+            font-size: 22px;
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+        .result-content {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #4a5568;
+        }
+        .result-content p {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 测试首页 -->
+        <div id="test-box">
+            <h1>我的专属社交人格测试</h1>
+            <p class="desc">本测试共20题，凭第一直觉选择，即可解锁你的专属人格类型</p>
+
+            <!-- 题目区域：每道题对应一个维度，data-dim是维度，data-reverse标记是否反向题 -->
+            <div class="question">
+                <p class="q-title">1. 聚会时，我会主动和不认识的人搭话</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q1" value="5" data-dim="E" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q1" value="4" data-dim="E">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q1" value="3" data-dim="E">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q1" value="2" data-dim="E">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q1" value="1" data-dim="E">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">2. 长时间的社交聚会后，我会感到疲惫，需要独处恢复精力</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q2" value="5" data-dim="E" data-reverse="true" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q2" value="4" data-dim="E" data-reverse="true">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q2" value="3" data-dim="E" data-reverse="true">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q2" value="2" data-dim="E" data-reverse="true">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q2" value="1" data-dim="E" data-reverse="true">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">3. 做事情时，我更关注具体的细节和可落地的步骤</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q3" value="5" data-dim="S" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q3" value="4" data-dim="S">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q3" value="3" data-dim="S">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q3" value="2" data-dim="S">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q3" value="1" data-dim="S">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">4. 比起细节，我对事物的整体框架和未来可能性更感兴趣</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q4" value="5" data-dim="S" data-reverse="true" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q4" value="4" data-dim="S" data-reverse="true">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q4" value="3" data-dim="S" data-reverse="true">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q4" value="2" data-dim="S" data-reverse="true">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q4" value="1" data-dim="S" data-reverse="true">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">5. 遇到分歧时，我更看重道理是否通顺，而非对方的情绪</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q5" value="5" data-dim="T" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q5" value="4" data-dim="T">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q5" value="3" data-dim="T">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q5" value="2" data-dim="T">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q5" value="1" data-dim="T">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">6. 做决定时，我会优先考虑他人的感受和处境</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q6" value="5" data-dim="T" data-reverse="true" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q6" value="4" data-dim="T" data-reverse="true">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q6" value="3" data-dim="T" data-reverse="true">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q6" value="2" data-dim="T" data-reverse="true">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q6" value="1" data-dim="T" data-reverse="true">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">7. 我喜欢提前做好计划，按规划好的日程做事</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q7" value="5" data-dim="J" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q7" value="4" data-dim="J">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q7" value="3" data-dim="J">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q7" value="2" data-dim="J">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q7" value="1" data-dim="J">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">8. 我喜欢即兴做事，享受随机应变的惊喜感</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q8" value="5" data-dim="J" data-reverse="true" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q8" value="4" data-dim="J" data-reverse="true">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q8" value="3" data-dim="J" data-reverse="true">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q8" value="2" data-dim="J" data-reverse="true">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q8" value="1" data-dim="J" data-reverse="true">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">9. 我很擅长在社交场合活跃气氛</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q9" value="5" data-dim="E" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q9" value="4" data-dim="E">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q9" value="3" data-dim="E">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q9" value="2" data-dim="E">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q9" value="1" data-dim="E">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">10. 我更习惯和少数几个亲密好友深度交往</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q10" value="5" data-dim="E" data-reverse="true" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q10" value="4" data-dim="E" data-reverse="true">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q10" value="3" data-dim="E" data-reverse="true">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q10" value="2" data-dim="E" data-reverse="true">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q10" value="1" data-dim="E" data-reverse="true">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">11. 我更相信有实际证据的结论，而非直觉</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q11" value="5" data-dim="S" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q11" value="4" data-dim="S">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q11" value="3" data-dim="S">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q11" value="2" data-dim="S">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q11" value="1" data-dim="S">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">12. 我经常会冒出很多新的、天马行空的想法</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q12" value="5" data-dim="S" data-reverse="true" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q12" value="4" data-dim="S" data-reverse="true">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q12" value="3" data-dim="S" data-reverse="true">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q12" value="2" data-dim="S" data-reverse="true">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q12" value="1" data-dim="S" data-reverse="true">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">13. 被人批评时，我更在意批评是否客观，而非情绪上的委屈</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q13" value="5" data-dim="T" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q13" value="4" data-dim="T">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q13" value="3" data-dim="T">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q13" value="2" data-dim="T">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q13" value="1" data-dim="T">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">14. 发生矛盾时，我更愿意先安抚对方的情绪，再解决问题</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q14" value="5" data-dim="T" data-reverse="true" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q14" value="4" data-dim="T" data-reverse="true">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q14" value="3" data-dim="T" data-reverse="true">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q14" value="2" data-dim="T" data-reverse="true">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q14" value="1" data-dim="T" data-reverse="true">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">15. 我喜欢把事情提前做完，避免临近截止日期的慌乱</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q15" value="5" data-dim="J" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q15" value="4" data-dim="J">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q15" value="3" data-dim="J">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q15" value="2" data-dim="J">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q15" value="1" data-dim="J">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">16. 我习惯把事情留到最后一刻，在 deadline 前效率最高</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q16" value="5" data-dim="J" data-reverse="true" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q16" value="4" data-dim="J" data-reverse="true">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q16" value="3" data-dim="J" data-reverse="true">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q16" value="2" data-dim="J" data-reverse="true">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q16" value="1" data-dim="J" data-reverse="true">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">17. 周末我更喜欢约朋友出门玩，而非宅在家里</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q17" value="5" data-dim="E" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q17" value="4" data-dim="E">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q17" value="3" data-dim="E">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q17" value="2" data-dim="E">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q17" value="1" data-dim="E">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">18. 我对细节的记忆力很强，很少会忽略具体的信息</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q18" value="5" data-dim="S" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q18" value="4" data-dim="S">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q18" value="3" data-dim="S">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q18" value="2" data-dim="S">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q18" value="1" data-dim="S">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">19. 我不会因为人情世故，改变自己认定的正确原则</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q19" value="5" data-dim="T" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q19" value="4" data-dim="T">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q19" value="3" data-dim="T">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q19" value="2" data-dim="T">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q19" value="1" data-dim="T">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question">
+                <p class="q-title">20. 我很少会做长期计划，更愿意走一步看一步</p>
+                <div class="options">
+                    <div class="option-item">
+                        <input type="radio" name="q20" value="5" data-dim="J" data-reverse="true" required>
+                        <label>非常同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q20" value="4" data-dim="J" data-reverse="true">
+                        <label>同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q20" value="3" data-dim="J" data-reverse="true">
+                        <label>中立</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q20" value="2" data-dim="J" data-reverse="true">
+                        <label>不同意</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="q20" value="1" data-dim="J" data-reverse="true">
+                        <label>非常不同意</label>
+                    </div>
+                </div>
+            </div>
+
+            <button id="submit-btn">查看我的人格结果</button>
+        </div>
+
+        <!-- 结果展示页 -->
+        <div id="result-box">
+            <div class="type-tag" id="type-code"></div>
+            <h2 class="result-title" id="type-name"></h2>
+            <div class="result-content" id="type-desc"></div>
+        </div>
+    </div>
+
+    <script>
+        // 提交按钮事件
+        document.getElementById('submit-btn').addEventListener('click', function() {
+            // 1. 检查所有题目是否都答了
+            const allRadios = document.querySelectorAll('input[type="radio"]:required');
+            let allAnswered = true;
+            allRadios.forEach(radio => {
+                const name = radio.name;
+                if (!document.querySelector(`input[name="${name}"]:checked`)) {
+                    allAnswered = false;
+                }
+            });
+            if (!allAnswered) {
+                alert('请完成所有题目后再查看结果哦');
+                return;
+            }
+
+            // 2. 初始化4个维度的总分
+            let scoreE = 0, scoreS = 0, scoreT = 0, scoreJ = 0;
+            // 每个维度的题目总数（用于计算偏向）
+            const countE = 10, countS = 10, countT = 10, countJ = 10;
+            // 维度满分=题数*5，中间值=题数*3
+            const midE = countE * 3, midS = countS * 3, midT = countT * 3, midJ = countJ * 3;
+
+            // 3. 遍历所有选中的选项，计算得分
+            const checkedOptions = document.querySelectorAll('input[type="radio"]:checked');
+            checkedOptions.forEach(option => {
+                let value = parseInt(option.value);
+                const dim = option.getAttribute('data-dim');
+                const isReverse = option.getAttribute('data-reverse') === 'true';
+
+                // 反向题倒转计分
+                if (isReverse) {
+                    value = 6 - value; // 5↔1，4↔2，3不变
+                }
+
+                // 对应维度加分
+                switch(dim) {
+                    case 'E': scoreE += value; break;
+                    case 'S': scoreS += value; break;
+                    case 'T': scoreT += value; break;
+                    case 'J': scoreJ += value; break;
+                }
+            });
+
+            // 4. 判断每个维度的偏向，生成类型代码
+            const typeE = scoreE >= midE ? 'E' : 'I';
+            const typeS = scoreS >= midS ? 'S' : 'N';
+            const typeT = scoreT >= midT ? 'T' : 'F';
+            const typeJ = scoreJ >= midJ ? 'J' : 'P';
+            const finalType = typeE + typeS + typeT + typeJ;
+
+            // 5. 16种类型的结果解析（可完全自定义修改）
+            const typeConfig = {
+                "ESTJ": {
+                    name: "总经理型",
+                    desc: "<p>你是天生的管理者，务实、果断、有责任心，擅长制定规则、组织团队完成目标。</p><p>你做事条理清晰，看重效率和结果，在团队中往往是值得信赖的核心人物。</p><p>你的优势是执行力强、逻辑清晰，短板是有时过于固执，对他人的情绪敏感度不足。</p>"
+                },
+                "ESTP": {
+                    name: "企业家型",
+                    desc: "<p>你是精力充沛的行动派，热爱挑战、灵活应变，擅长在瞬息万变的环境中抓住机会。</p><p>你务实接地气，喜欢在实践中学习，社交能力出众，总能快速和人打成一片。</p><p>你的优势是适应力强、敢想敢做，短板是缺乏长期规划，容易对枯燥的事情失去耐心。</p>"
+                },
+                "ESFJ": {
+                    name: "执政官型",
+                    desc: "<p>你是温暖的守护者，热心、共情力强，擅长照顾他人的感受，是团队中的粘合剂。</p><p>你看重和谐的人际关系，乐于奉献，总能记住身边人的喜好和需求。</p><p>你的优势是亲和力强、责任心重，短板是有时过于在意他人的看法，容易委屈自己。</p>"
+                },
+                "ESFP": {
+                    name: "表演者型",
+                    desc: "<p>你是天生的乐天派，热情、开朗、富有感染力，总能给身边的人带来快乐。</p><p>你热爱生活，享受当下，擅长发现生活中的美好，是社交场合中的气氛担当。</p><p>你的优势是乐观开朗、适应力强，短板是容易逃避复杂的问题，缺乏长期规划。</p>"
+                },
+                "ENTJ": {
+                    name: "指挥官型",
+                    desc: "<p>你是天生的领导者，战略眼光出众，果断、理性，擅长制定长远规划并带领团队实现。</p><p>你目标感极强，敢于挑战权威，能快速发现问题的核心并给出解决方案。</p><p>你的优势是格局大、执行力强，短板是有时过于强势，对他人的情绪不够包容。</p>"
+                },
+                "ENTP": {
+                    name: "辩论家型",
+                    desc: "<p>你是思维敏捷的创新者，脑洞大、口才好，擅长从不同角度看待问题，热爱思想碰撞。</p><p>你对新鲜事物充满好奇，敢于挑战传统，总能冒出天马行空的想法。</p><p>你的优势是逻辑强、创意足，短板是容易对重复的事情失去耐心，不擅长落地执行。</p>"
+                },
+                "ENFJ": {
+                    name: "教育家型",
+                    desc: "<p>你是富有魅力的引路人，共情力和领导力兼具，擅长发现他人的潜力并引导对方成长。</p><p>你理想主义，看重价值观的契合，有很强的感染力，能带动身边的人一起变好。</p><p>你的优势是同理心强、沟通能力出众，短板是有时过于理想主义，容易过度付出。</p>"
+                },
+                "ENFP": {
+                    name: "追梦人型",
+                    desc: "<p>你是热情的理想主义者，乐观、富有创造力，对世界充满好奇，永远在追逐自己热爱的事物。</p><p>你共情力强，善于和人建立深度连接，总能给身边的人带来正能量。</p><p>你的优势是创意足、感染力强，短板是容易陷入情绪内耗，不擅长处理繁琐的细节。</p>"
+                },
+                "ISTJ": {
+                    name: "检查员型",
+                    desc: "<p>你是严谨的务实派，踏实、靠谱、责任心极强，做事一丝不苟，是团队中最值得信赖的后盾。</p><p>你看重规则和秩序，擅长处理细节，能把事情做到极致的稳妥。</p><p>你的优势是细心、执行力强，短板是有时过于保守，对突发变化的适应力不足。</p>"
+                },
+                "ISTP": {
+                    name: "手艺人型",
+                    desc: "<p>你是冷静的技术派，理性、动手能力强，擅长拆解问题，用最简洁的方式解决核心难题。</p><p>你低调内敛，不爱社交，喜欢在实践中探索，对机械、技术类事物有天生的敏感度。</p><p>你的优势是逻辑强、动手能力出众，短板是不擅长表达情绪，对长期规划的关注度不足。</p>"
+                },
+                "ISFJ": {
+                    name: "守卫者型",
+                    desc: "<p>你是温柔的守护者，细心、耐心、共情力强，默默付出，总能照顾到身边人的情绪和需求。</p><p>你看重家庭和亲密关系，责任感极强，愿意为了在乎的人奉献自己。</p><p>你的优势是细心、包容心强，短板是有时过于隐忍，容易忽略自己的需求。</p>"
+                },
+                "ISFP": {
+                    name: "艺术家型",
+                    desc: "<p>你是温柔的审美家，敏感、细腻、富有创造力，热爱生活中的美好事物，有自己独特的精神世界。</p><p>你低调内敛，不喜欢冲突，享受当下，用自己的方式表达对世界的感受。</p><p>你的优势是审美出众、共情力强，短板是容易逃避冲突，对压力的承受力较弱。</p>"
+                },
+                "INTJ": {
+                    name: "建筑师型",
+                    desc: "<p>你是理性的战略家，智商出众、思维缜密，擅长构建长远的体系和规划，永远在追求自我提升。</p><p>你独立内敛，不喜欢无效社交，对自己和他人都有极高的要求，能看透事物的本质。</p><p>你的优势是逻辑强、格局大，短板是有时过于孤傲，对他人的情绪敏感度不足。</p>"
+                },
+                "INTP": {
+                    name: "逻辑学家型",
+                    desc: "<p>你是热爱思考的哲学家，对世界充满好奇，擅长抽象思维和逻辑推理，永远在探索事物的底层规律。</p><p>你理性、内敛，不喜欢被规则束缚，脑洞极大，对自己感兴趣的领域会深入钻研。</p><p>你的优势是逻辑强、创意足，短板是不擅长处理繁琐的日常事务，容易陷入思维内耗。</p>"
+                },
+                "INFJ": {
+                    name: "咨询师型",
+                    desc: "<p>你是神秘的理想主义者，敏感、深刻、有极强的洞察力，能看透他人的内心和事物的本质。</p><p>你有自己坚定的价值观，共情力极强，擅长深度思考，是天生的精神引路人。</p><p>你的优势是洞察力强、同理心出众，短板是过于内耗，对他人的情绪负担过重。</p>"
+                },
+                "INFP": {
+                    name: "调停者型",
+                    desc: "<p>你是浪漫的理想主义者，内心柔软、善良，有自己丰富的精神世界，永远在追求真善美。</p><p>你共情力极强，能感受到他人的情绪，讨厌冲突，愿意为了自己的信仰付出一切。</p><p>你的优势是同理心强、创造力出众，短板是容易陷入情绪内耗，对现实的适应力不足。</p>"
+                }
+            };
+
+            // 6. 渲染结果
+            document.getElementById('type-code').innerText = finalType;
+            document.getElementById('type-name').innerText = typeConfig[finalType].name;
+            document.getElementById('type-desc').innerHTML = typeConfig[finalType].desc;
+
+            // 隐藏测试页，显示结果页
+            document.getElementById('test-box').style.display = 'none';
+            document.getElementById('result-box').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
