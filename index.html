@@ -4,238 +4,455 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>鹅鸭杀群人格测试</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&amp;display=swap');
+        
+        :root {
+            --tw-color-primary: #ff2d55;
+        }
+        
+        * {
+            font-family: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+        }
+        
         body {
-            font-family: "Microsoft YaHei", sans-serif;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            min-height: 100vh;
+            background: linear-gradient(135deg, #6b46c1 0%, #ec4899 100%);
         }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(16px);
         }
-
-        /* 封面页 */
-        #cover {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+        
+        .question-card {
+            animation: fadeInScale 0.4s ease forwards;
         }
-        #cover h1 {
-            font-size: 3.5rem;
-            margin-bottom: 30px;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
         }
-        .start-btn {
-            padding: 15px 50px;
-            font-size: 1.5rem;
-            background: #ff4757;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 8px 20px rgba(255, 71, 87, 0.4);
-            transition: all 0.3s;
-        }
-        .start-btn:hover {
-            transform: scale(1.1);
-            background: #ff3742;
-        }
-
-        /* 测试题页面 */
-        #test {
-            display: none;
-            min-height: 100vh;
-            padding-top: 50px;
-        }
-        .question {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 20px;
-            margin-bottom: 30px;
-        }
-        .question h2 {
-            margin-bottom: 25px;
-            font-size: 1.4rem;
-        }
-        .options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        
         .option {
-            background: rgba(255,255,255,0.15);
-            padding: 15px 20px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        
         .option:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateX(10px);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.15);
         }
-
-        /* 结果页 */
-        #result {
-            display: none;
-            min-height: 100vh;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 40px 20px;
+        
+        .option.selected {
+            background: rgba(255, 255, 255, 0.3) !important;
+            border: 3px solid #fff;
+            transform: scale(1.03);
         }
-        #result h1 {
-            font-size: 2.8rem;
-            margin-bottom: 20px;
-        }
+        
         #result-name {
-            font-size: 4rem;
-            margin: 30px 0;
-            color: #fff;
-            text-shadow: 0 0 30px rgba(255,255,255,0.8);
-            animation: glow 2s infinite alternate;
+            animation: resultPop 1s ease forwards;
         }
-        @keyframes glow {
-            from { text-shadow: 0 0 20px #fff; }
-            to { text-shadow: 0 0 40px #ff4757, 0 0 60px #ff4757; }
+        
+        @keyframes resultPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); opacity: 1; }
         }
-        .restart-btn {
-            margin-top: 40px;
-            padding: 12px 40px;
-            font-size: 1.2rem;
-            background: #2ed573;
-            border: none;
-            border-radius: 50px;
-            color: white;
-            cursor: pointer;
+        
+        .confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
         }
     </style>
 </head>
-<body>
-
+<body class="min-h-screen text-white overflow-x-hidden">
     <!-- 封面 -->
-    <div id="cover">
-        <div class="container">
-            <h1>🦢 鹅鸭杀群人格测试</h1>
-            <p style="font-size: 1.4rem; margin-bottom: 60px; opacity: 0.9;">测测你是群里的哪种人格~</p>
-            <button class="start-btn" onclick="startTest()">开始测试</button>
+    <div id="cover" class="min-h-screen flex items-center justify-center px-4">
+        <div class="max-w-xl w-full text-center">
+            <!-- 标题区 -->
+            <div class="flex justify-center gap-3 mb-6">
+                <span class="text-6xl">🦢</span>
+                <span class="text-6xl">🦆</span>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-bold tracking-tighter mb-4 leading-none">
+                鹅鸭杀群人格测试
+            </h1>
+            <p class="text-xl md:text-2xl opacity-90 mb-10">
+                5题测出你在群里的真实身份<br>
+                <span class="text-pink-200">快来对号入座～</span>
+            </p>
+            
+            <!-- 开始按钮 -->
+            <button onclick="startTest()" 
+                    class="group relative inline-flex items-center justify-center px-12 py-6 text-2xl font-medium rounded-3xl bg-white text-pink-600 shadow-2xl hover:scale-110 active:scale-95 transition-all duration-300 overflow-hidden">
+                <span class="relative z-10 flex items-center gap-3">
+                    开始测试
+                    <span class="text-3xl group-active:rotate-12 transition">→</span>
+                </span>
+                <div class="absolute inset-0 bg-gradient-to-r from-pink-400 to-rose-400 opacity-0 group-hover:opacity-20 transition"></div>
+            </button>
+            
+            <p class="text-sm opacity-60 mt-12">参照16Personalities风格 · 纯前端 · 结果随机生成</p>
         </div>
     </div>
 
-    <!-- 测试题页面 -->
-    <div id="test">
-        <div class="container">
-            <div class="question" id="q1">
-                <h2>1. 你的家乡在哪？</h2>
-                <div class="options">
-                    <div class="option" onclick="answer(1, 0)">献县</div>
-                    <div class="option" onclick="answer(1, 1)">美国</div>
+    <!-- 测试页面 -->
+    <div id="test" class="hidden min-h-screen">
+        <!-- 顶部进度条 -->
+        <div class="sticky top-0 z-50 bg-white/10 backdrop-blur-lg border-b border-white/20">
+            <div class="max-w-2xl mx-auto px-6 py-4 flex items-center justify-between">
+                <button onclick="backToCover()" 
+                        class="flex items-center gap-2 text-white/80 hover:text-white transition">
+                    <span class="text-xl">←</span>
+                    <span class="font-medium">返回首页</span>
+                </button>
+                
+                <div class="flex-1 max-w-[280px] mx-6">
+                    <div class="flex justify-between text-xs font-medium mb-1">
+                        <div>第 <span id="current-q" class="text-2xl font-bold">1</span> 题</div>
+                        <div class="text-white/70">共 5 题</div>
+                    </div>
+                    <div class="h-2 bg-white/20 rounded-3xl overflow-hidden">
+                        <div id="progress-bar" 
+                             class="h-full bg-white transition-all duration-500 rounded-3xl w-1/5"></div>
+                    </div>
+                </div>
+                
+                <div class="text-sm font-medium text-white/70">鹅鸭杀</div>
+            </div>
+        </div>
+
+        <div class="max-w-2xl mx-auto px-4 pt-8 pb-12">
+            <!-- 问题容器 -->
+            <div id="q1" class="question-card glass rounded-3xl p-8 md:p-10 shadow-2xl">
+                <div class="text-pink-200 text-sm font-medium tracking-widest mb-3">QUESTION 01 / 05</div>
+                <h2 class="text-2xl md:text-3xl font-semibold leading-tight mb-10">你的家乡在哪？</h2>
+                <div class="space-y-4">
+                    <div onclick="selectOption(1, 0, this)" 
+                         class="option glass flex items-center justify-between px-8 py-6 rounded-3xl text-xl cursor-pointer border-2 border-transparent">
+                        <span>献县</span>
+                        <span class="text-3xl">🇨🇳</span>
+                    </div>
+                    <div onclick="selectOption(1, 1, this)" 
+                         class="option glass flex items-center justify-between px-8 py-6 rounded-3xl text-xl cursor-pointer border-2 border-transparent">
+                        <span>美国</span>
+                        <span class="text-3xl">🇺🇸</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="question" id="q2" style="display:none;">
-                <h2>2. 你高中在哪里毕业？</h2>
-                <div class="options">
-                    <div class="option" onclick="answer(2, 0)">献县第一中学</div>
-                    <div class="option" onclick="answer(2, 1)">清华大学附属中学</div>
+            <div id="q2" class="question-card glass rounded-3xl p-8 md:p-10 shadow-2xl hidden">
+                <div class="text-pink-200 text-sm font-medium tracking-widest mb-3">QUESTION 02 / 05</div>
+                <h2 class="text-2xl md:text-3xl font-semibold leading-tight mb-10">你高中在哪里毕业？</h2>
+                <div class="space-y-4">
+                    <div onclick="selectOption(2, 0, this)" 
+                         class="option glass flex items-center justify-between px-8 py-6 rounded-3xl text-xl cursor-pointer border-2 border-transparent">
+                        <span>献县第一中学</span>
+                    </div>
+                    <div onclick="selectOption(2, 1, this)" 
+                         class="option glass flex items-center justify-between px-8 py-6 rounded-3xl text-xl cursor-pointer border-2 border-transparent">
+                        <span>清华大学附属中学</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="question" id="q3" style="display:none;">
-                <h2>3. 你的身高是多少？</h2>
-                <div class="options">
-                    <div class="option" onclick="answer(3, 0)">160-170</div>
-                    <div class="option" onclick="answer(3, 1)">170-180</div>
+            <div id="q3" class="question-card glass rounded-3xl p-8 md:p-10 shadow-2xl hidden">
+                <div class="text-pink-200 text-sm font-medium tracking-widest mb-3">QUESTION 03 / 05</div>
+                <h2 class="text-2xl md:text-3xl font-semibold leading-tight mb-10">你的身高是多少？</h2>
+                <div class="space-y-4">
+                    <div onclick="selectOption(3, 0, this)" 
+                         class="option glass flex items-center justify-between px-8 py-6 rounded-3xl text-xl cursor-pointer border-2 border-transparent">
+                        <span>160-170</span>
+                    </div>
+                    <div onclick="selectOption(3, 1, this)" 
+                         class="option glass flex items-center justify-between px-8 py-6 rounded-3xl text-xl cursor-pointer border-2 border-transparent">
+                        <span>170-180</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="question" id="q4" style="display:none;">
-                <h2>4. 你最想成为谁？</h2>
-                <div class="options">
-                    <div class="option" onclick="answer(4, 0)">张元英</div>
-                    <div class="option" onclick="answer(4, 1)">我自己</div>
+            <div id="q4" class="question-card glass rounded-3xl p-8 md:p-10 shadow-2xl hidden">
+                <div class="text-pink-200 text-sm font-medium tracking-widest mb-3">QUESTION 04 / 05</div>
+                <h2 class="text-2xl md:text-3xl font-semibold leading-tight mb-10">你最想成为谁？</h2>
+                <div class="space-y-4">
+                    <div onclick="selectOption(4, 0, this)" 
+                         class="option glass flex items-center justify-between px-8 py-6 rounded-3xl text-xl cursor-pointer border-2 border-transparent">
+                        <span>张元英</span>
+                    </div>
+                    <div onclick="selectOption(4, 1, this)" 
+                         class="option glass flex items-center justify-between px-8 py-6 rounded-3xl text-xl cursor-pointer border-2 border-transparent">
+                        <span>我自己</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="question" id="q5" style="display:none;">
-                <h2>5. 1+1=？</h2>
-                <div class="options">
-                    <div class="option" onclick="answer(5, 0)">2</div>
-                    <div class="option" onclick="answer(5, 1)">0</div>
+            <div id="q5" class="question-card glass rounded-3xl p-8 md:p-10 shadow-2xl hidden">
+                <div class="text-pink-200 text-sm font-medium tracking-widest mb-3">QUESTION 05 / 05</div>
+                <h2 class="text-2xl md:text-3xl font-semibold leading-tight mb-10">1+1=？</h2>
+                <div class="space-y-4">
+                    <div onclick="selectOption(5, 0, this)" 
+                         class="option glass flex items-center justify-between px-8 py-6 rounded-3xl text-xl cursor-pointer border-2 border-transparent">
+                        <span>2</span>
+                    </div>
+                    <div onclick="selectOption(5, 1, this)" 
+                         class="option glass flex items-center justify-between px-8 py-6 rounded-3xl text-xl cursor-pointer border-2 border-transparent">
+                        <span>0</span>
+                    </div>
                 </div>
+            </div>
+
+            <!-- 下一题按钮 -->
+            <div id="next-btn" onclick="nextQuestion()" 
+                 class="hidden mt-8 mx-auto w-fit px-14 py-4 bg-white text-pink-600 rounded-3xl font-semibold text-xl flex items-center gap-3 shadow-xl hover:shadow-2xl transition-all">
+                下一题 
+                <span class="text-2xl">→</span>
             </div>
         </div>
     </div>
 
     <!-- 结果页面 -->
-    <div id="result">
-        <div class="container">
-            <h1>你的鹅鸭杀群人格是</h1>
-            <div id="result-name"></div>
-            <button class="restart-btn" onclick="restart()">重新测试</button>
+    <div id="result" class="hidden min-h-screen flex items-center justify-center px-4">
+        <div class="max-w-xl w-full text-center">
+            <div class="mb-8 text-6xl">🎉</div>
+            <h1 class="text-3xl font-medium opacity-90 mb-2">你的鹅鸭杀群人格是</h1>
+            <div id="result-name" class="text-6xl md:text-7xl font-bold text-white drop-shadow-2xl mb-8"></div>
+            
+            <p class="text-xl opacity-75 mb-12">恭喜你！你在群里就是这个味儿～</p>
+            
+            <button onclick="restart()" 
+                    class="px-10 py-5 bg-white/20 hover:bg-white/30 backdrop-blur-md border border-white/30 rounded-3xl text-xl font-medium flex items-center gap-3 mx-auto transition">
+                <span>再测一次</span>
+                <span class="text-2xl rotate-12">🔄</span>
+            </button>
+            
+            <canvas id="confetti" class="confetti-canvas"></canvas>
         </div>
     </div>
 
     <script>
-        const names = ["张靖涵", "赵雅涵", "刘硕", "刘瑶", "王梦涵", "赵英坤", "吕心茹", "范畅"];
-
-        let answers = {};
-
-        function startTest() {
-            document.getElementById('cover').style.display = 'none';
-            document.getElementById('test').style.display = 'block';
-            showQuestion(1);
+        // Tailwind 初始化
+        function initTailwind() {
+            return {
+                config(userConfig = {}) {
+                    return {
+                        configUser: userConfig,
+                        defaultTheme: {
+                            extend: {}
+                        }
+                    }
+                },
+                theme(config) {
+                    return {
+                        ...config,
+                        colors: {
+                            ...config.colors,
+                            primary: '#ff2d55'
+                        }
+                    }
+                }
+            }
         }
-
+        
+        // 启动 Tailwind
+        const config = initTailwind().config()
+        document.documentElement.setAttribute('data-tailwind-config', JSON.stringify(config))
+        
+        // 全局变量
+        let currentQuestion = 1
+        let selectedAnswers = {}
+        const names = ["张靖涵", "赵雅涵", "刘硕", "刘瑶", "王梦涵", "赵英坤", "吕心茹", "范畅"]
+        
+        // 显示指定问题
         function showQuestion(q) {
+            // 隐藏所有问题
             for (let i = 1; i <= 5; i++) {
-                const el = document.getElementById(`q${i}`);
-                if (el) el.style.display = (i === q) ? 'block' : 'none';
+                const el = document.getElementById(`q${i}`)
+                if (el) el.classList.add('hidden')
+            }
+            // 显示当前
+            const currentEl = document.getElementById(`q${q}`)
+            if (currentEl) currentEl.classList.remove('hidden')
+            
+            // 更新进度
+            currentQuestion = q
+            document.getElementById('current-q').textContent = q
+            const progress = ((q - 1) / 5) * 100 + 20
+            document.getElementById('progress-bar').style.width = `${progress}%`
+            
+            // 隐藏下一题按钮（点击选项后再显示）
+            document.getElementById('next-btn').classList.add('hidden')
+        }
+        
+        // 选择选项
+        function selectOption(q, choice, element) {
+            // 清除同题其他选项的选中样式
+            const siblings = element.parentElement.children
+            for (let sibling of siblings) {
+                sibling.classList.remove('selected')
+            }
+            // 高亮当前
+            element.classList.add('selected')
+            
+            // 记录答案（虽然结果随机，但保留逻辑）
+            selectedAnswers[q] = choice
+            
+            // 显示下一题按钮
+            document.getElementById('next-btn').classList.remove('hidden')
+            
+            // 如果是最后一题，按钮文字改为“查看结果”
+            if (q === 5) {
+                const btn = document.getElementById('next-btn')
+                btn.innerHTML = `查看结果 <span class="text-2xl">🎉</span>`
             }
         }
-
-        function answer(question, choice) {
-            answers[question] = choice;
-            
-            if (question < 5) {
-                showQuestion(question + 1);
+        
+        // 下一题
+        function nextQuestion() {
+            if (currentQuestion < 5) {
+                showQuestion(currentQuestion + 1)
             } else {
-                showResult();
+                showResult()
             }
         }
-
+        
+        // 开始测试
+        function startTest() {
+            document.getElementById('cover').classList.add('hidden')
+            document.getElementById('test').classList.remove('hidden')
+            selectedAnswers = {}
+            currentQuestion = 1
+            showQuestion(1)
+        }
+        
+        // 显示结果 + 彩带
         function showResult() {
-            document.getElementById('test').style.display = 'none';
-            document.getElementById('result').style.display = 'flex';
+            document.getElementById('test').classList.add('hidden')
+            document.getElementById('result').classList.remove('hidden')
             
-            // 全随机生成结果（不管用户怎么选）
-            const randomIndex = Math.floor(Math.random() * names.length);
-            const resultName = names[randomIndex];
+            // 随机结果
+            const randomIndex = Math.floor(Math.random() * names.length)
+            const resultName = names[randomIndex]
+            document.getElementById('result-name').textContent = resultName
             
-            document.getElementById('result-name').textContent = resultName;
+            // 发射彩带
+            launchConfetti()
         }
-
-        function restart() {
-            answers = {};
-            document.getElementById('result').style.display = 'none';
-            document.getElementById('cover').style.display = 'flex';
-        }
-
-        // 按回车也可以开始测试（可选）
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && document.getElementById('cover').style.display !== 'none') {
-                startTest();
+        
+        // 彩带效果（轻量版 Canvas 彩带）
+        function launchConfetti() {
+            const canvas = document.getElementById('confetti')
+            const ctx = canvas.getContext('2d')
+            
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+            
+            const colors = ['#ff2d55', '#ec4899', '#a78bfa', '#22d3ee', '#facc15']
+            const particles = []
+            
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width
+                    this.y = Math.random() * canvas.height - canvas.height
+                    this.size = Math.random() * 12 + 8
+                    this.speedY = Math.random() * 8 + 6
+                    this.speedX = Math.random() * 4 - 2
+                    this.color = colors[Math.floor(Math.random() * colors.length)]
+                    this.angle = Math.random() * 360
+                    this.rotationSpeed = Math.random() * 0.08 - 0.04
+                }
+                update() {
+                    this.y += this.speedY
+                    this.x += this.speedX
+                    this.angle += this.rotationSpeed
+                    this.speedY += 0.12
+                }
+                draw() {
+                    ctx.save()
+                    ctx.translate(this.x, this.y)
+                    ctx.rotate(this.angle)
+                    ctx.fillStyle = this.color
+                    ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size)
+                    ctx.restore()
+                }
             }
-        });
+            
+            // 创建粒子
+            for (let i = 0; i < 180; i++) {
+                particles.push(new Particle())
+            }
+            
+            let animationFrame
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height)
+                
+                let stillAlive = false
+                
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const p = particles[i]
+                    p.update()
+                    p.draw()
+                    
+                    if (p.y < canvas.height + 50) {
+                        stillAlive = true
+                    } else {
+                        particles.splice(i, 1)
+                    }
+                }
+                
+                // 持续补充新粒子
+                if (particles.length < 80) {
+                    for (let i = 0; i < 12; i++) {
+                        particles.push(new Particle())
+                    }
+                }
+                
+                if (stillAlive) {
+                    animationFrame = requestAnimationFrame(animate)
+                } else {
+                    cancelAnimationFrame(animationFrame)
+                    canvas.width = 0 // 清理
+                }
+            }
+            
+            animate()
+            
+            // 5秒后自动停止
+            setTimeout(() => {
+                cancelAnimationFrame(animationFrame)
+                canvas.width = 0
+            }, 5000)
+        }
+        
+        // 重新开始
+        function restart() {
+            document.getElementById('result').classList.add('hidden')
+            document.getElementById('cover').classList.remove('hidden')
+            // 清空画布
+            const canvas = document.getElementById('confetti')
+            canvas.width = 0
+        }
+        
+        // 返回封面
+        function backToCover() {
+            if (confirm('确定要放弃当前测试吗？')) {
+                document.getElementById('test').classList.add('hidden')
+                document.getElementById('cover').classList.remove('hidden')
+            }
+        }
+        
+        // 键盘支持
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '/' && document.getElementById('cover').classList.contains('hidden') === false) {
+                startTest()
+            }
+        })
+        
+        console.log('%c✅ 鹅鸭杀群人格测试美化完成！已参照16Personalities现代风格，使用 Tailwind + 玻璃态卡片 + 进度条 + 彩带效果', 'color:#ff2d55; font-size:13px; font-weight:700')
     </script>
 </body>
 </html>
